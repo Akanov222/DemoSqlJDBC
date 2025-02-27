@@ -1,2 +1,2 @@
 # DemoSqlJDBC
-Create demo project with JDBC
+Create demo project with JDBC (orign12)
