@@ -9,7 +9,7 @@ import lombok.*;
 //@ToString
 public class Product {
 
-    private int productId;
+    private Long productId;
     private String maker;
     private int model;
     private String type;
@@ -17,24 +17,18 @@ public class Product {
     public Product() {
     }
 
-    public Product(String maker, int model, String type) {
-        this.maker = maker;
-        this.model = model;
-        this.type = type;
-    }
-
-    public Product(int productId, String maker, int model, String type) {
+    public Product(Long productId, String maker, int model, String type) {
         this.productId = productId;
         this.maker = maker;
         this.model = model;
         this.type = type;
     }
 
-    public int getProductId() {
+    public Long getProductId() {
         return productId;
     }
 
-    public void setProductId(int productId) {
+    public void setProductId(Long productId) {
         this.productId = productId;
     }
 

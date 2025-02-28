@@ -8,15 +8,14 @@ import java.util.List;
 
 public class DemoRun {
     public static void main(String[] args) {
-//        Product product = new Product("N", 3438, "OldPhone10");
-//        ProductDaoImpl productDao = new ProductDaoImpl();
-//        productDao.saveProduct(product);
-
+        Product product = new Product(2L,"N", 2222, "OldPhone2");
         ProductDaoImpl productDao = new ProductDaoImpl();
-        List<Product> listProducts = new ArrayList<>();
-        listProducts = productDao.getAllProduct();
+        productDao.saveProduct(product);
+
+        ProductDaoImpl productDao2 = new ProductDaoImpl();
+        List<Product> listProducts = productDao2.getAllProduct();
         for (Product prod : listProducts) {
-            System.out.println(prod);
+            System.out.println(prod.toString());
         }
     }
 }

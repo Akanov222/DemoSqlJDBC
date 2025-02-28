@@ -4,7 +4,8 @@ DROP TABLE IF EXISTS Laptop;
 DROP TABLE IF EXISTS Printer;
 
 CREATE TABLE Product (
-    product_id int generated always as identity PRIMARY KEY,
+--     product_id int generated always as identity PRIMARY KEY,
+    product_id SERIAL PRIMARY KEY,
     maker varchar(100),
     model integer not null,
     type varchar(100)

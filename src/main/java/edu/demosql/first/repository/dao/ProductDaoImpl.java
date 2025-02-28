@@ -5,7 +5,6 @@ import edu.demosql.first.repository.domain.Product;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import static edu.demosql.first.repository.config.Config.*;
@@ -13,7 +12,7 @@ import static edu.demosql.first.repository.config.Config.*;
 public class ProductDaoImpl {
 
     public static final String SELECT_PRODUCTS =
-            "SELECT maker, model, type FROM product";
+            "SELECT * FROM product";
 
     public static final String SAVE_PRODUCT =
             "INSERT INTO product (" +
@@ -21,6 +20,10 @@ public class ProductDaoImpl {
                     "model," +
                     "type)" +
                     "VALUES (?, ?, ?)";
+
+    public static final String UPDATE_PRODUCT =
+            "UPDATE product SET maker = ?, model = ?, type = ? " +
+                    "WHERE product_id = ?";
 
     private Connection getConnection() throws SQLException {
         Connection connection = DriverManager.getConnection(
@@ -33,43 +36,58 @@ public class ProductDaoImpl {
     public List<Product> getAllProduct() {
         List<Product> result = new ArrayList<>();
         try (Connection connection = getConnection();
-            PreparedStatement statement = connection.prepareStatement(SELECT_PRODUCTS)) {
-            ResultSet resultSet = statement.executeQuery();
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(SELECT_PRODUCTS)) {
             while (resultSet.next()) {
-                Product oneProduct = fillProducts(resultSet);
-                result.add(oneProduct);
+                result.add(findProducts(resultSet));
             }
-            resultSet.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
         return result;
     }
 
-    private Product fillProducts(ResultSet rs) throws SQLException {
+    private Product findProducts(ResultSet rs) throws SQLException {
         Product oneProduct = new Product();
+        oneProduct.setProductId(rs.getLong("product_id"));
         oneProduct.setMaker(rs.getString("maker"));
         oneProduct.setModel(rs.getInt("model"));
         oneProduct.setType(rs.getString("type"));
         return oneProduct;
     }
 
-    public void saveProduct(Product product) {
-        try (Connection connection = getConnection();
-            PreparedStatement statement = connection.prepareStatement(SAVE_PRODUCT)) {
-            connection.setAutoCommit(false);
-            try {
+    public Product saveProduct(Product product) {
+        if (product.getProductId() == null) {
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement(SAVE_PRODUCT, Statement.RETURN_GENERATED_KEYS)) {
+                connection.setAutoCommit(false);
                 statement.setString(1, product.getMaker());
                 statement.setInt(2, product.getModel());
                 statement.setString(3, product.getType());
                 statement.executeUpdate();
+                ResultSet rs = statement.getGeneratedKeys();
+                if (rs.next()) {
+                    product.setProductId(rs.getLong(1));
+                }
+                rs.close();
                 connection.commit();
             } catch (SQLException e) {
-                connection.rollback();
-                throw e;
+                e.printStackTrace();
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        } else {
+            try (Connection connection = getConnection();
+                 PreparedStatement statement = connection.prepareStatement(UPDATE_PRODUCT)) {
+                connection.setAutoCommit(false);
+                statement.setString(1, product.getMaker());
+                statement.setInt(2, product.getModel());
+                statement.setString(3, product.getType());
+                statement.setLong(4, product.getProductId());
+                statement.executeUpdate();
+                connection.commit();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
+        return product;
     }
 }
