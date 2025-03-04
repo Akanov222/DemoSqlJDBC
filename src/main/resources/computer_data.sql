@@ -1,21 +1,3 @@
--- INSERT INTO Product (product_id, maker, model, type) VALUES
--- (1,'B',1121,'PC'),
--- (2,'A',1232,'PC'),
--- (3,'A',1233,'PC'),
--- (4,'E',1260,'PC'),
--- (5,'A',1276,'Printer'),
--- (6,'D',1288,'Printer'),
--- (7,'A',1298,'Laptop'),
--- (8,'C',1321,'Laptop'),
--- (9,'A',1401,'Printer'),
--- (10,'A',1408,'Printer'),
--- (11,'D',1433,'Printer'),
--- (12,'E',1434,'Printer'),
--- (13,'B',1750,'Laptop'),
--- (14,'A',1752,'Laptop'),
--- (15,'E',2112,'PC'),
--- (16,'E',2113,'PC');
-
 INSERT INTO Product (maker, model, type) VALUES
  ('B',1121,'PC'),
  ('A',1232,'PC'),

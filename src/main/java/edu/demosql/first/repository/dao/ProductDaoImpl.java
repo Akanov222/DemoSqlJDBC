@@ -11,7 +11,21 @@ import static edu.demosql.first.repository.config.Config.*;
 
 public class ProductDaoImpl {
 
-    public static final String SELECT_PRODUCTS =
+//   TODO
+//    Create table
+//    Delete table
+
+    public static final String CREATE_TABLE =
+            "CREATE TABLE product (" +
+                    "product_id SERIAL PRIMARY KEY," +
+                    "maker VARCHAR(255)," +
+                    "model INTEGER," +
+                    "type VARCHAR(255))";
+
+    public static final String DROP_TABLE_PRODUCT =
+            "DROP TABLE product";
+
+    public static final String GET_ALL_PRODUCTS =
             "SELECT * FROM product";
 
     public static final String SAVE_PRODUCT =
@@ -25,6 +39,9 @@ public class ProductDaoImpl {
             "UPDATE product SET maker = ?, model = ?, type = ? " +
                     "WHERE product_id = ?";
 
+    public static final String DELETE_ONE_PRODUCT =
+            "DELETE FROM product WHERE product_id = ?";
+
     private Connection getConnection() throws SQLException {
         Connection connection = DriverManager.getConnection(
                 Config.getProperty(DB_URL),
@@ -33,11 +50,29 @@ public class ProductDaoImpl {
         return connection;
     }
 
+    public void createTableProduct() {
+        try (Connection connection = getConnection();
+             Statement statement = connection.createStatement()) {
+            statement.executeUpdate(CREATE_TABLE);
+        } catch (SQLException e) {
+            throw new RuntimeException();
+        }
+    }
+
+    public void dropTableProduct() {
+        try (Connection connection = getConnection();
+        Statement statement = connection.createStatement()) {
+            statement.executeUpdate(DROP_TABLE_PRODUCT);
+        } catch (SQLException e) {
+            throw new RuntimeException();
+        }
+    }
+
     public List<Product> getAllProduct() {
         List<Product> result = new ArrayList<>();
         try (Connection connection = getConnection();
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(SELECT_PRODUCTS)) {
+            ResultSet resultSet = statement.executeQuery(GET_ALL_PRODUCTS)) {
             while (resultSet.next()) {
                 result.add(findProducts(resultSet));
             }
@@ -89,5 +124,15 @@ public class ProductDaoImpl {
             }
         }
         return product;
+    }
+
+    public void deleteOneProduct(Long id) {
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(DELETE_ONE_PRODUCT)) {
+            statement.setLong(1, id);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

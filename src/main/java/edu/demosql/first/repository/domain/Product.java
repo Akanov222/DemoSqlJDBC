@@ -17,6 +17,12 @@ public class Product {
     public Product() {
     }
 
+    public Product(String maker, int model, String type) {
+        this.maker = maker;
+        this.model = model;
+        this.type = type;
+    }
+
     public Product(Long productId, String maker, int model, String type) {
         this.productId = productId;
         this.maker = maker;
