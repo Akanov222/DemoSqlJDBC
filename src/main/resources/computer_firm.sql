@@ -26,7 +26,7 @@ CREATE TABLE Laptop (
     speed integer not null,
     ram integer not null,
     hd float(1) not null,
-    price float(2),
+    price float(2) not null,
     screen integer not null
 );
 

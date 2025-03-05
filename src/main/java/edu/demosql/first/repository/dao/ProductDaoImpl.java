@@ -11,19 +11,15 @@ import static edu.demosql.first.repository.config.Config.*;
 
 public class ProductDaoImpl {
 
-//   TODO
-//    Create table
-//    Delete table
-
-    public static final String CREATE_TABLE =
-            "CREATE TABLE product (" +
+    public static final String CREATE_TABLE_PRODUCT =
+            "CREATE TABLE IF NOT EXISTS product (" +
                     "product_id SERIAL PRIMARY KEY," +
                     "maker VARCHAR(255)," +
                     "model INTEGER," +
                     "type VARCHAR(255))";
 
     public static final String DROP_TABLE_PRODUCT =
-            "DROP TABLE product";
+            "DROP TABLE IF EXISTS product";
 
     public static final String GET_ALL_PRODUCTS =
             "SELECT * FROM product";
@@ -36,7 +32,10 @@ public class ProductDaoImpl {
                     "VALUES (?, ?, ?)";
 
     public static final String UPDATE_PRODUCT =
-            "UPDATE product SET maker = ?, model = ?, type = ? " +
+            "UPDATE product SET " +
+                    "maker = ?, " +
+                    "model = ?, " +
+                    "type = ? " +
                     "WHERE product_id = ?";
 
     public static final String DELETE_ONE_PRODUCT =
@@ -53,7 +52,7 @@ public class ProductDaoImpl {
     public void createTableProduct() {
         try (Connection connection = getConnection();
              Statement statement = connection.createStatement()) {
-            statement.executeUpdate(CREATE_TABLE);
+            statement.executeUpdate(CREATE_TABLE_PRODUCT);
         } catch (SQLException e) {
             throw new RuntimeException();
         }
@@ -91,10 +90,11 @@ public class ProductDaoImpl {
         return oneProduct;
     }
 
-    public Product saveProduct(Product product) {
+    public void saveProduct(Product product) {
         if (product.getProductId() == null) {
             try (Connection connection = getConnection();
-                 PreparedStatement statement = connection.prepareStatement(SAVE_PRODUCT, Statement.RETURN_GENERATED_KEYS)) {
+                 PreparedStatement statement = connection.prepareStatement
+                         (SAVE_PRODUCT, Statement.RETURN_GENERATED_KEYS)) {
                 connection.setAutoCommit(false);
                 statement.setString(1, product.getMaker());
                 statement.setInt(2, product.getModel());
@@ -123,7 +123,6 @@ public class ProductDaoImpl {
                 e.printStackTrace();
             }
         }
-        return product;
     }
 
     public void deleteOneProduct(Long id) {

@@ -12,6 +12,15 @@ public class Pc {
     public Pc() {
     }
 
+    public Pc( int model, int speed, int ram, float hd, String cd, float price) {
+        this.model = model;
+        this.speed = speed;
+        this.ram = ram;
+        this.hd = hd;
+        this.cd = cd;
+        this.price = price;
+    }
+
     public Pc(Long pc_id, int model, int speed, int ram, float hd, String cd, float price) {
         this.pc_id = pc_id;
         this.model = model;
