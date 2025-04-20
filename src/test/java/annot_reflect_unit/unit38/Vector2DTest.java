@@ -1,0 +1,39 @@
+package annot_reflect_unit.unit38;
+
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+public class Vector2DTest {
+    // 1e-9 = 0.000_000_0001
+    private final double EPS = 1e-9;
+    private static Vector2D v1;
+
+    @BeforeClass
+    public static void createVector2D() {
+        v1 = new Vector2D();
+    }
+
+    @Test
+    public void newVectorShouldHaveZeroLength() {
+        //assertion
+        Assert.assertEquals(0, v1.length(), EPS);
+    }
+
+    @Test
+    public void newVectorShouldHaveZeroX() {
+        Assert.assertEquals(0, v1.getX(), EPS);
+    }
+
+    @Test
+    public void newVectorShouldHaveZeroY() {
+        Assert.assertEquals(0, v1.getY(), EPS);
+    }
+
+//    @Test
+//    public void newVectorShouldHaveZeroXZeroY() {
+//        Assert.assertEquals(0, v1.getX(), EPS);
+//        Assert.assertEquals(0, v1.getY(), EPS);
+//    }
+}
